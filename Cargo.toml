@@ -1,0 +1,7 @@
+[package]
+name = "utk"
+version = "0.1.0"
+authors = ["link"]
+edition = "2018"
+
+[dependencies]
