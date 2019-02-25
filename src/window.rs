@@ -1,11 +1,12 @@
 use std::vec::Vec;
 use crate::event::Event;
+use crate::video::Render;
 pub struct WindowSurface {
     inner:Vec<u32>,
     width:u32,
     height:u32,
     events_loop:Vec<Event>,
-    render:u32,
+    render:Render,
 }
 
 impl WindowSurface {
@@ -15,11 +16,11 @@ impl WindowSurface {
             width:600,
             height:800,
             events_loop:Vec::new(),
-            render:8,
+            render:Render::new(),
         }
     }
     pub fn run(&mut self){
-        self.render("vulkakn");
+        self.render();
     }
     // 窗口event处理
     pub fn poll_event(&mut self){
@@ -29,7 +30,7 @@ impl WindowSurface {
 
     }
     //窗口渲染
-    pub fn render(&mut self, render: &str) {
-        dbg!(render);
+    pub fn render(&mut self) {
+        self.render.render()
     }
 }

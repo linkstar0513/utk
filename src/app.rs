@@ -4,11 +4,16 @@ use std::time::{
 };
 
 use crate::window::WindowSurface;
-use crate::event::Event;
+use crate::event::{
+    Event,
+    EventsLoop,
+    WindowEvent,
+    AppEvent
+};
 
 pub struct Application {
     windows:Vec<WindowSurface>,
-    event_loop:Vec<Event>,
+    event_loop:EventsLoop,
 
 }
 
@@ -20,10 +25,16 @@ impl Application {
     pub fn new() -> Self {
         Application {
             windows:Vec::new(),
-            event_loop: Vec::new(),
+            event_loop: EventsLoop::new(),
         }
     }
-    pub fn init(&self){
+    pub fn init(&mut self){
+        self.emit_event(Event::MouseEvent);
+        self.emit_event(Event::WindowEvent{event:WindowEvent::Close});
+
+        self.emit_event(Event::AppEvent{event:AppEvent::Close});
+
+
         println!("---------------------------------------");
         dbg!("init");
     }
@@ -33,6 +44,12 @@ impl Application {
         self.init();
 
         let mut is_continue = true;
+        loop {
+            self.event_loop.poll_events(|event|{
+
+            });
+            break;
+        }
 
         while is_continue {
             dbg!("frame start");
@@ -54,6 +71,50 @@ impl Application {
 
         self.shutdown();
     }
+
+    pub fn exec_poll_event(&mut self){
+        self.init();
+        let mut is_continue = true;
+
+        while is_continue {
+
+            println!("---------------------------------------");
+            dbg!("frame start");
+            let pre = Instant::now();
+
+            self.event_loop.poll_events(|event|{
+                match event {
+                    Event::AppEvent{event:AppEvent::Close} => {
+                        is_continue = false;
+                    },
+                    Event::WindowEvent{..} => {
+                        dbg!(event);
+                    },
+                    Event::MouseEvent => {
+                        dbg!(event);
+                    }
+                    _ => {
+                        dbg!(event);
+                    }
+                }
+            });
+            dbg!("frame end");
+            println!("---------------------------------------");
+
+
+            self.sycn_fps(&pre);
+
+        }
+
+
+
+
+
+
+
+        self.shutdown();
+    }
+
     //更新视图
     pub fn update(&mut self){
         for window in self.windows.iter_mut(){
@@ -70,19 +131,10 @@ impl Application {
 
     }
     //事件处理
-    pub fn poll_event(&self) -> bool{
-        for event in self.event_loop.iter(){
-            match event {
-                Event::WindowEvent => {
-                    dbg!(3);
-                    return false;
-                },
-                _ => {
-                    dbg!(0);
-                    return true;
-                }
-            }
-        }
+    pub fn poll_event(&mut self) -> bool{
+        self.event_loop.poll_events(|e|{
+            dbg!(e);
+        });
         return true;
 
     }
