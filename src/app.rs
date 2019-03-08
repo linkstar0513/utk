@@ -11,6 +11,9 @@ use crate::event::{
     AppEvent
 };
 
+pub mod cmd;
+pub use self::cmd::Cmd;
+
 pub struct Application {
     windows:Vec<WindowSurface>,
     event_loop:EventsLoop,

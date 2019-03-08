@@ -3,6 +3,8 @@ pub fn translate(){
     println!("translate");
 }
 
+
+pub mod core;
 pub mod app;
 pub mod window;
 pub mod event;
