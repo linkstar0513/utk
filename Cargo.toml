@@ -5,3 +5,4 @@ authors = ["link"]
 edition = "2018"
 
 [dependencies]
+async-std = "*"

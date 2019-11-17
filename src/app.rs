@@ -148,7 +148,6 @@ impl Application {
     pub fn shutdown(&self){
         dbg!("shutdown");
         println!("---------------------------------------");
-;
     }
     // 同步帧率
     pub fn sycn_fps(&self, pre: &Instant){
@@ -156,5 +155,11 @@ impl Application {
         let fps_delay = Duration::new(1,0)/1;
         let sleep_time = fps_delay - cal;
         ::std::thread::sleep(sleep_time);
+    }
+}
+
+impl Application {
+    pub fn on_close(&self) {
+        println!("close");
     }
 }

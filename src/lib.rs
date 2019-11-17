@@ -10,6 +10,7 @@ pub mod window;
 pub mod event;
 pub mod audio;
 pub mod video;
+pub mod net;
 
 #[cfg(test)]
 mod tests {
