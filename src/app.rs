@@ -3,7 +3,8 @@ use std::time::{
     Duration
 };
 
-use crate::window::WindowSurface;
+use crate::window::{WindowSurface, VitrualDomSurface};
+use crate::window::Window;
 use crate::event::{
     Event,
     EventsLoop,
@@ -15,9 +16,8 @@ pub mod cmd;
 pub use self::cmd::Cmd;
 
 pub struct Application {
-    windows:Vec<WindowSurface>,
+    windows: Vec<Box<dyn Window>>,
     event_loop:EventsLoop,
-
 }
 
 /**
@@ -38,7 +38,7 @@ impl Application {
         self.emit_event(Event::AppEvent{event:AppEvent::Close});
 
 
-        println!("---------------------------------------");
+        // println!("---------------------------------------");
         dbg!("init");
     }
     // 程序运行入口
@@ -64,7 +64,7 @@ impl Application {
             let pre = Instant::now();
             self.update();
             dbg!("frame end");
-            println!("---------------------------------------");
+            // println!("---------------------------------------");
 
             self.sycn_fps(&pre);
 
@@ -81,7 +81,7 @@ impl Application {
 
         while is_continue {
 
-            println!("---------------------------------------");
+            // println!("---------------------------------------");
             dbg!("frame start");
             let pre = Instant::now();
 
@@ -102,7 +102,7 @@ impl Application {
                 }
             });
             dbg!("frame end");
-            println!("---------------------------------------");
+            // println!("---------------------------------------");
 
 
             self.sycn_fps(&pre);
@@ -121,7 +121,7 @@ impl Application {
     //更新视图
     pub fn update(&mut self){
         for window in self.windows.iter_mut(){
-            window.run();
+            window.update();
         }
     }
     // 应用event
@@ -141,13 +141,9 @@ impl Application {
         return true;
 
     }
-    //增加窗口
-    pub fn add_window(&mut self,window:WindowSurface){
-        self.windows.push(window);
-    }
     pub fn shutdown(&self){
         dbg!("shutdown");
-        println!("---------------------------------------");
+        // println!("---------------------------------------");
     }
     // 同步帧率
     pub fn sycn_fps(&self, pre: &Instant){
@@ -157,9 +153,21 @@ impl Application {
         ::std::thread::sleep(sleep_time);
     }
 }
+impl Application {
+    pub fn add_window(&mut self, window: impl Window + 'static){
+        self.windows.push(Box::new(window));
+    }
+}
 
 impl Application {
     pub fn on_close(&self) {
-        println!("close");
+        // println!("close");
+    }
+}
+use crate::dom::VitrualDom;
+impl Application {
+    pub fn render(&mut self,mut rootDom: VitrualDom, VWindow: ()){
+        println!("{:#?}", &rootDom);
+        self.windows.push(Box::new(VitrualDomSurface::new(rootDom)));
     }
 }

@@ -1,4 +1,4 @@
-
+#[allow(non_snake_case)]
 pub fn translate(){
     println!("translate");
 }
@@ -11,6 +11,8 @@ pub mod event;
 pub mod audio;
 pub mod video;
 pub mod net;
+pub mod dom;
+pub mod component;
 
 #[cfg(test)]
 mod tests {
