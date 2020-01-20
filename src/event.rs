@@ -65,3 +65,10 @@ impl EventsLoop{
         self.0.push(event);
     }
 }
+#[derive(Default)]
+pub struct EventEmitter{
+    pub event_handle: Vec<Box<dyn Fn()>>
+}
+impl EventEmitter {
+    pub fn emit(){}
+}

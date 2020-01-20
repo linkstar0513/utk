@@ -12,12 +12,34 @@ use crate::event::{
     AppEvent
 };
 
+// use winit::{
+//     event::{Event, WindowEvent},
+//     event_loop::{ControlFlow, EventLoop},
+//     window::WindowBuilder,
+// };
+
 pub mod cmd;
 pub use self::cmd::Cmd;
+
+// type WEventLoop = winit::event_loop::EventLoop;
+pub struct EventStore{
+    init: Vec<Box<Fn()>>,
+    // mouseEventHandle: Vec<Box<Fn()>>,
+    // customEventHandle: Vec<Box<Fn()>>,
+}
+impl EventStore {
+    pub fn new() -> Self{
+        EventStore {
+            init: Vec::new(),
+        }
+    }
+}
 
 pub struct Application {
     windows: Vec<Box<dyn Window>>,
     event_loop:EventsLoop,
+    event_store: EventStore,
+    // winit_event_loop: winit::event_loop::EventLoop<()>,
 }
 
 /**
@@ -26,10 +48,16 @@ new -> init -> exec-> shutdown
 
 impl Application {
     pub fn new() -> Self {
+        // let winit_event_loop = winit::event_loop::EventLoop::new();
         Application {
             windows:Vec::new(),
             event_loop: EventsLoop::new(),
+            event_store: EventStore::new(),
+            // winit_event_loop,
         }
+    }
+    pub fn on_init(&mut self, init: Box<Fn()>) {
+        self.event_store.init.push(init);
     }
     pub fn init(&mut self){
         self.emit_event(Event::MouseEvent);
@@ -43,7 +71,15 @@ impl Application {
     }
     // 程序运行入口
 
+    // 分发event
+    pub fn dispatch(&mut self, event: Event){
+
+    }
+
     pub fn exec(&mut self){
+        for init_all in &self.event_store.init {
+            init_all();
+        }
         self.init();
 
         let mut is_continue = true;
@@ -53,23 +89,39 @@ impl Application {
             });
             break;
         }
+        let eventloop = winit::event_loop::EventLoop::new();
+        eventloop.run(move |event, _, control_flow| {
+            match event {
+                _ => {
+                    // selfRef.dispatch(Event::MouseEvent);
+                    // println!("{:?}",event);
+                },
+            }
+        });
+        // eventloop.run(move |event, _, control_flow| {
+        //     match event {
+        //         _ => {
+        //             // selfRef.dispatch(Event::MouseEvent);
+        //             // println!("{:?}",event);
+        //         },
+        //     }
+        // });
+        // while is_continue {
+        //     dbg!("frame start");
 
-        while is_continue {
-            dbg!("frame start");
+
+        //     self.drain_event();
+        //     is_continue = self.poll_event();
+
+        //     let pre = Instant::now();
+        //     self.update();
+        //     dbg!("frame end");
+        //     // println!("---------------------------------------");
+
+        //     self.sycn_fps(&pre);
 
 
-            self.drain_event();
-            is_continue = self.poll_event();
-
-            let pre = Instant::now();
-            self.update();
-            dbg!("frame end");
-            // println!("---------------------------------------");
-
-            self.sycn_fps(&pre);
-
-
-        }
+        // }
 
 
         self.shutdown();

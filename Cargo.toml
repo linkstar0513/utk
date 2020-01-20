@@ -6,3 +6,9 @@ edition = "2018"
 
 [dependencies]
 async-std = "*"
+actix-web = "*"
+tokio = "*"
+hyper = "*"
+image = "*"
+winit = "*"
+num-complex = "*"

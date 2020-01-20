@@ -64,7 +64,7 @@ impl VitrualDomSurface {
 
 impl Window for VitrualDomSurface {
     fn update(&mut self){
-        dbg!("VirtualDomSurface更新");
+        dbg!("VirtualDomSurface更新{:#?}", &self.root_dom);
         self.root_dom.render();
     }
 }

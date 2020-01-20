@@ -13,6 +13,7 @@ pub mod video;
 pub mod net;
 pub mod dom;
 pub mod component;
+pub mod image;
 
 #[cfg(test)]
 mod tests {
