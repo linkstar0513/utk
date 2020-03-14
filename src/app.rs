@@ -209,6 +209,9 @@ impl Application {
     pub fn add_window(&mut self, window: impl Window + 'static){
         self.windows.push(Box::new(window));
     }
+    pub fn add_window_id(&mut self, window_id: usize){
+
+    }
 }
 
 impl Application {
