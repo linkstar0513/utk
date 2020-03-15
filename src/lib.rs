@@ -3,7 +3,8 @@ pub fn translate(){
     println!("translate");
 }
 
-
+pub mod device;
+pub mod platform;
 pub mod core;
 pub mod app;
 pub mod window;

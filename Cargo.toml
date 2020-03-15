@@ -12,3 +12,4 @@ hyper = "*"
 image = "*"
 winit = "*"
 num-complex = "*"
+winit-blit = {git="https://github.com/rust-windowing/winit-blit"}
